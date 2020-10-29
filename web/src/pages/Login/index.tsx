@@ -33,14 +33,15 @@ const Login: React.FC = () => {
         return
       }
 
-      throw new Error(responseData.error)
+      //TODO
+      alert(responseData.error)
     }
     catch (err) {
-      //TODO 
+      //TODO
       alert(err)
     }
 
-  }, [])
+  }, [data, history])
 
   const handleUserChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
