@@ -9,7 +9,7 @@ class Product {
   name: string
 
   @Column()
-  price: string
+  price: number
 
   @Column()
   path: string

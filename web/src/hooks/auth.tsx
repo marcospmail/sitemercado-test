@@ -28,7 +28,6 @@ const AuthProvider: React.FC = ({ children }) => {
   }, [])
 
   const logout = useCallback(() => {
-    console.log('logging out...')
     setUser(null)
   }, [])
 

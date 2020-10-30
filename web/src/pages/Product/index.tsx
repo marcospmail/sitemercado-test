@@ -46,12 +46,14 @@ const Product: React.FC = () => {
   useEffect(() => {
     async function fetchProduct() {
       const response = await api.get(`/products/${id}`)
-      setProduct(response.data)
+      const { data } = response
 
-      setImage(oldData => ({ ...oldData, imagePreview: response.data.path }))
+      setProduct(data)
+
+      setImage(oldData => ({ ...oldData, imagePreview: data.path }))
     }
 
-    fetchProduct()
+    editing && fetchProduct()
   }, [])
 
   const handleImageChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -67,8 +69,6 @@ const Product: React.FC = () => {
 
   const handleDataChange = useCallback(
     (name: string, value: string | number) => {
-      console.log(name, value)
-
       setProduct(oldData => ({ ...oldData, [name]: value }))
     },
     []
@@ -92,8 +92,6 @@ const Product: React.FC = () => {
       data.append('price', String(product.price))
 
       if (image.file) data.append('image', image.file)
-
-      console.log(data)
 
       const response = await api.post('/products', data)
 

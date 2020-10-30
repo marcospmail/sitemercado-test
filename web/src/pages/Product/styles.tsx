@@ -19,13 +19,24 @@ export const Content = styled.div`
     justify-content: space-between;
 
     strong {
-      font-size: 30px;
+      font-size: 24px;
       font-weight: bold;
       color: #949494;
     }
 
     button:first-child {
       margin-right: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    header {
+      flex-direction: column;
+
+      * {
+        width: 100%;
+        margin-top: 5px;
+      }
     }
   }
 `

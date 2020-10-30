@@ -22,7 +22,7 @@ export const Content = styled.div`
     justify-content: space-between;
 
     strong {
-      font-size: 30px;
+      font-size: 24px;
       font-weight: bold;
       color: #949494;
     }
@@ -46,6 +46,21 @@ export const Content = styled.div`
       align-items: center;
       justify-content: space-between;
       background: #fff;
+      transition: border 0.2s;
+      cursor: pointer;
+
+      &:hover {
+        border: 1px solid #666;
+
+        svg {
+          color: #666;
+        }
+      }
+
+      svg {
+        color: #ddd;
+        transition: color 0.2s;
+      }
 
       > span {
         color: #666;
@@ -54,7 +69,22 @@ export const Content = styled.div`
       > button {
         background: transparent;
         border: 0;
+
+        &:first-child {
+          margin-right: 30px;
+        }
       }
     }
+  }
+`
+
+export const EmptyData = styled.div`
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    color: #666;
   }
 `

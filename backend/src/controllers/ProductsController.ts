@@ -31,11 +31,7 @@ export default {
 
     const productsRepository = getRepository(product)
 
-    console.log(req.body)
-
     let path
-
-    console.log(req.file)
 
     if (req.file)
       path = req.file.filename
@@ -49,5 +45,15 @@ export default {
     await productsRepository.save(newProduct)
 
     return res.status(201).json(newProduct)
+  },
+
+  async delete(req: Request, res: Response) {
+    const { id } = req.params
+
+    const productsRepository = getRepository(product)
+
+    const newProduct = productsRepository.delete(id)
+
+    return res.status(200).json(newProduct)
   }
 }
