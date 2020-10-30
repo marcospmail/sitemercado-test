@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { getRepository } from 'typeorm'
+import * as Yup from 'yup'
 
 import product from '../models/Product'
 import productView from '../views/products_views'
@@ -29,18 +30,24 @@ export default {
       price
     } = req.body
 
-    const productsRepository = getRepository(product)
-
-    let path
+    const data : { name: string, price: number, path?: string } = { name, price, path: undefined }
 
     if (req.file)
-      path = req.file.filename
+      data.path = req.file.filename
 
-    const newProduct = productsRepository.create({
-      name, 
-      price,
-      path
+    const schemaValidation = Yup.object().shape({
+      name: Yup.string().required(),
+      price: Yup.number().required(),
+      path: Yup.string(),
     })
+
+    await schemaValidation.validate(data, {
+      abortEarly: false
+    })
+
+    const productsRepository = getRepository(product)
+
+    const newProduct = productsRepository.create(data)
 
     await productsRepository.save(newProduct)
 
@@ -56,6 +63,21 @@ export default {
       name,
       price
     } = req.body
+    
+    const data : { name: string, price: number, path: string | undefined } = { name, price, path: undefined }
+
+    if (req.file)
+      data.path = req.file.filename
+
+    const schemaValidation = Yup.object().shape({
+      name: Yup.string(),
+      price: Yup.number(),
+      path: Yup.string(),
+    })
+
+    await schemaValidation.validate(data, {
+      abortEarly: false
+    })
 
     const productsRepository = getRepository(product)
 
