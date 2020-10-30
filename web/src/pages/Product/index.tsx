@@ -97,8 +97,6 @@ const Product: React.FC = () => {
 
       if (image.file) data.append('image', image.file)
 
-      console.log(image.file)
-
       let response
 
       if (editing) {

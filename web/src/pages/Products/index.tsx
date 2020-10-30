@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
-import { FiArrowRight, FiTrash } from 'react-icons/fi'
+import { FiTrash } from 'react-icons/fi'
+import { confirmAlert } from 'react-confirm-alert'
 
 import Button from '../../components/Button'
 import Header from '../../components/Header'
@@ -25,7 +26,7 @@ const Products: React.FC = () => {
     fetchProducts()
   }, [])
 
-  const handleDelete = useCallback(
+  const deleteProductApiCall = useCallback(
     async id => {
       try {
         const response = await api.delete(`/products/${id}`)
@@ -43,6 +44,26 @@ const Products: React.FC = () => {
       } catch (err) {
         toast.error('Falha ao deletar produto')
       }
+    },
+    [products]
+  )
+
+  const handleDelete = useCallback(
+    async product => {
+      confirmAlert({
+        title: 'Confirmar exclusão',
+        message: product.name,
+        buttons: [
+          {
+            label: 'Deletar',
+            onClick: () => deleteProductApiCall(product.id),
+          },
+          {
+            label: 'Cancelar',
+            onClick: () => {},
+          },
+        ],
+      })
     },
     [products]
   )
@@ -69,7 +90,7 @@ const Products: React.FC = () => {
                 <button
                   onClick={e => {
                     e.stopPropagation()
-                    handleDelete(p.id)
+                    handleDelete(p)
                   }}
                 >
                   <FiTrash size={14} />
