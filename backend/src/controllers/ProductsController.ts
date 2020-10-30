@@ -55,8 +55,6 @@ export default {
   },
 
   async update(req: Request, res: Response) {
-    console.log(req)
-
     const { id } = req.params
 
     const {

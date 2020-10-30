@@ -76,55 +76,58 @@ const Product: React.FC = () => {
     []
   )
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
 
-    try {
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
-        price: Yup.number()
-          .positive('O preço do produto deve ser maior que R$0,00')
-          .required('Preço obrigatório'),
-      })
-
-      await schema.validate(product, {
-        abortEarly: false,
-      })
-
-      const data = new FormData()
-      data.append('name', product.name)
-      data.append('price', String(product.price))
-
-      if (image.file) data.append('image', image.file)
-
-      let response
-
-      if (editing) {
-        response = await api.put(`/products/${product.id}`, data)
-      } else {
-        response = await api.post('/products', data)
-      }
-
-      if (response.status !== 201) {
-        throw new Error(response.data.message)
-      }
-
-      toast.success('Produto salvo')
-      goBack()
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const yupErrors = err as Yup.ValidationError
-
-        yupErrors.inner.forEach(error => {
-          toast.error(error.message)
+      try {
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
+          price: Yup.number()
+            .positive('O preço do produto deve ser maior que R$0,00')
+            .required('Preço obrigatório'),
         })
 
-        return
-      }
+        await schema.validate(product, {
+          abortEarly: false,
+        })
 
-      toast.error('Falha ao salvar produto')
-    }
-  }
+        const data = new FormData()
+        data.append('name', product.name)
+        data.append('price', String(product.price))
+
+        if (image.file) data.append('image', image.file)
+
+        let response
+
+        if (editing) {
+          response = await api.put(`/products/${product.id}`, data)
+        } else {
+          response = await api.post('/products', data)
+        }
+
+        if (response.status !== 201) {
+          throw new Error(response.data.message)
+        }
+
+        toast.success('Produto salvo')
+        goBack()
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const yupErrors = err as Yup.ValidationError
+
+          yupErrors.inner.forEach(error => {
+            toast.error(error.message)
+          })
+
+          return
+        }
+
+        toast.error('Falha ao salvar produto')
+      }
+    },
+    [product, image]
+  )
 
   return (
     <Container>
