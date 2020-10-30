@@ -18,6 +18,8 @@ import api from '../../config/api'
 
 import ProductProps from '../../types/product'
 
+import imagePlaceholder from '../../assets/image_placeholder.png'
+
 import { Container, Content, Data, AvatarInput } from './styles'
 
 interface ParamTypes {
@@ -109,7 +111,7 @@ const Product: React.FC = () => {
         throw new Error(response.data.message)
       }
 
-      toast.success('Produto salvo!')
+      toast.success('Produto salvo')
       goBack()
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -147,10 +149,7 @@ const Product: React.FC = () => {
         <Data id="form" onSubmit={handleSubmit}>
           <AvatarInput>
             <img
-              src={
-                image.imagePreview ||
-                'https://image.shutterstock.com/image-vector/ui-image-placeholder-wireframes-apps-260nw-1037719204.jpg'
-              }
+              src={image.imagePreview || imagePlaceholder}
               alt="Imagem produto"
             />
             <label htmlFor="avatar">
