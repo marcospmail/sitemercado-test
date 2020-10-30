@@ -29,6 +29,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const logout = useCallback(() => {
     setUser(null)
+    localStorage.removeItem('@MercadoSite:user')
   }, [])
 
   return (

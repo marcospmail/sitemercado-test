@@ -55,7 +55,7 @@ const Products: React.FC = () => {
         message: product.name,
         buttons: [
           {
-            label: 'Deletar',
+            label: 'Excluir',
             onClick: () => deleteProductApiCall(product.id),
           },
           {

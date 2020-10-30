@@ -83,7 +83,7 @@ const Product: React.FC = () => {
       const schema = Yup.object().shape({
         name: Yup.string().required('Nome obrigatório'),
         price: Yup.number()
-          .positive('Valor deve ser maior que 0')
+          .positive('O valor do produto deve ser maior que R$0,00')
           .required('Preço obrigatório'),
       })
 
@@ -156,7 +156,7 @@ const Product: React.FC = () => {
             </label>
           </AvatarInput>
 
-          <label>NOME PRODUTO</label>
+          <label>NOME</label>
           <input
             name="name"
             value={product.name}

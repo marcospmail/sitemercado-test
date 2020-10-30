@@ -20,10 +20,13 @@ const Login: React.FC = () => {
 
   const history = useHistory()
   const [data, setData] = useState<FormData>({} as FormData)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleFormSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
+
+      setLoading(true)
 
       try {
         const schema = Yup.object().shape({
@@ -35,6 +38,7 @@ const Login: React.FC = () => {
           abortEarly: false,
         })
 
+        // the API is not validating the data here, just auth
         const response = await siteMercadoApi.post('/login', data, {
           auth: {
             username: `${process.env.REACT_APP_API_USERNAME}`,
@@ -50,7 +54,10 @@ const Login: React.FC = () => {
         }
 
         toast.error(responseData.error)
+        setLoading(false)
       } catch (err) {
+        setLoading(false)
+
         if (err instanceof Yup.ValidationError) {
           const yupErrors = err as Yup.ValidationError
 
@@ -93,7 +100,7 @@ const Login: React.FC = () => {
           />
 
           <Button type="submit" primary>
-            Entrar
+            {loading ? 'Aguarde...' : 'Entrar'}
           </Button>
         </form>
       </Content>
