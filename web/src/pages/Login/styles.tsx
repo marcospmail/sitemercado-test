@@ -1,19 +1,26 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+`
 
+export const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 
- form {
+  flex: 1;
+
+  form {
     width: 350px;
+
     display: flex;
     flex-direction: column;
 
     span {
-      color: #0e2fa9;
+      color: #4167df;
       font-weight: bold;
       font-size: 32px;
       margin-bottom: 20px;
@@ -23,7 +30,7 @@ export const Container = styled.div`
       height: 48px;
       padding: 5px 15px;
       border-radius: 10px;
-      border: 1px solid #0e2fa9;
+      border: 1px solid #ddd;
       margin-top: 10px;
     }
 
@@ -35,11 +42,8 @@ export const Container = styled.div`
       background: none;
       border: 0;
       font-weight: bold;
-      color: #FFF;
-      background-color: #0e2fa9;
+      color: #fff;
+      background-color: #4167df;
     }
- }
+  }
 `
-
-
-

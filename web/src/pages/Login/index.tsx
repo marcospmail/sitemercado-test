@@ -1,9 +1,14 @@
 import React, { useState, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
-import api from '../../config/api'
-import apiAuth from '../../config/api_auth'
+import { toast } from 'react-toastify'
+import * as Yup from 'yup'
+import Button from '../../components/Button'
 
-import { Container } from './styles'
+import Header from '../../components/Header'
+import siteMercadoApi from '../../config/siteMercadoApi'
+import { useAuth } from '../../hooks/auth'
+
+import { Container, Content } from './styles'
 
 interface FormData {
   username: string
@@ -11,62 +16,87 @@ interface FormData {
 }
 
 const Login: React.FC = () => {
+  const { signIn } = useAuth()
+
   const history = useHistory()
   const [data, setData] = useState<FormData>({} as FormData)
 
-  const handleFormSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleFormSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
 
-    try {
-      const response = await api.post('/login',
-        data, {
-        auth: {
-          username: apiAuth.username,
-          password: apiAuth.password
+      try {
+        const schema = Yup.object().shape({
+          username: Yup.string().required('Usuário obrigatório'),
+          password: Yup.string().required('Senha obrigatória'),
+        })
+
+        await schema.validate(data, {
+          abortEarly: false,
+        })
+
+        const response = await siteMercadoApi.post('/login', data, {
+          auth: {
+            username: `${process.env.REACT_APP_API_USERNAME}`,
+            password: `${process.env.REACT_APP_API_PASSWORD}`,
+          },
+        })
+
+        const responseData = response.data
+
+        if (responseData.success) {
+          signIn(data)
+          return
         }
-      })
 
-      const responseData = response.data
+        toast.error(responseData.error)
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const yupErrors = err as Yup.ValidationError
 
-      if (responseData.success) {
-        history.push('/products')
-        return
+          yupErrors.inner.forEach(error => {
+            toast.error(error.message)
+          })
+
+          return
+        }
+
+        toast.error('Falha ao realizar login')
       }
+    },
+    [data, history]
+  )
 
-      //TODO
-      alert(responseData.error)
-    }
-    catch (err) {
-      //TODO
-      alert(err)
-    }
-
-  }, [data, history])
-
-  const handleUserChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
-    setData(oldData => ({ ...oldData, username: value }))
-  }, [])
-
-  const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
-    setData(oldData => ({ ...oldData, password: value }))
-  }, [])
+  const handleDataChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      setData(oldData => ({ ...oldData, [name]: value }))
+    },
+    []
+  )
 
   return (
-    <Container >
+    <Container>
+      <Header />
 
-      <form onSubmit={handleFormSubmit}>
+      <Content>
+        <form onSubmit={handleFormSubmit}>
+          <input
+            name="username"
+            placeholder="Usuário"
+            onChange={handleDataChange}
+          />
+          <input
+            name="password"
+            placeholder="Senha"
+            onChange={handleDataChange}
+          />
 
-        <span>Site Mercado</span>
-
-        <input name="username" placeholder="Usuário" onChange={handleUserChange} />
-        <input name="password" placeholder="Senha" onChange={handlePasswordChange} />
-
-        <button type="submit">Entrar</button>
-
-      </form>
-
+          <Button type="submit" primary>
+            Entrar
+          </Button>
+        </form>
+      </Content>
     </Container>
   )
 }
