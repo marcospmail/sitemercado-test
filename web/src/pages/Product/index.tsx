@@ -80,7 +80,9 @@ const Product: React.FC = () => {
     try {
       const schema = Yup.object().shape({
         name: Yup.string().required('Nome obrigatório'),
-        price: Yup.number().required('Preço obrigatório'),
+        price: Yup.number()
+          .positive('Valor deve ser maior que 0')
+          .required('Preço obrigatório'),
       })
 
       await schema.validate(product, {
@@ -93,7 +95,15 @@ const Product: React.FC = () => {
 
       if (image.file) data.append('image', image.file)
 
-      const response = await api.post('/products', data)
+      console.log(image.file)
+
+      let response
+
+      if (editing) {
+        response = await api.put(`/products/${product.id}`, data)
+      } else {
+        response = await api.post('/products', data)
+      }
 
       if (response.status !== 201) {
         throw new Error(response.data.message)

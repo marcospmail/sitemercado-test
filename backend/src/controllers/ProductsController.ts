@@ -47,6 +47,37 @@ export default {
     return res.status(201).json(newProduct)
   },
 
+  async update(req: Request, res: Response) {
+    console.log(req)
+
+    const { id } = req.params
+
+    const {
+      name,
+      price
+    } = req.body
+
+    const productsRepository = getRepository(product)
+
+    const productFound = await productsRepository.findOne(id)
+
+    if (!productFound) return res.status(400).json({message: 'Product not found'})
+
+    if (name)
+      productFound.name = name
+
+    if (price)
+      productFound.price = price
+
+    if (req.file)
+      productFound.path = req.file.filename
+
+
+    const updatedProduct = await productsRepository.save(productFound)
+
+    return res.status(201).json(updatedProduct)
+  },
+
   async delete(req: Request, res: Response) {
     const { id } = req.params
 
