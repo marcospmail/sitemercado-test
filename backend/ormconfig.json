@@ -1,0 +1,20 @@
+[
+  {
+    "name": "default",
+    "type": "mssql",
+    "host": "localhost",
+    "port": 1433,
+    "username": "sa",
+    "password": "Putz@NaoSei!",
+    "database": "SiteMercadoTest",
+    "entities": [
+      "./src/models/*.ts"
+    ],
+    "migrations": [
+      "./src/database/migrations/*.ts"
+    ],
+    "cli": {
+      "migrationsDir": "./src/database/migrations"
+    }
+  }
+]
