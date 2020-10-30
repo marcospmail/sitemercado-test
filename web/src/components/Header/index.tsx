@@ -8,7 +8,7 @@ const Header: React.FC = () => {
 
   return (
     <Container>
-      <strong>SiteMercado</strong>
+      <strong>SiteMercadoTest</strong>
       {!!user && <button onClick={logout}>Sair</button>}
     </Container>
   )

@@ -32,7 +32,7 @@ const Products: React.FC = () => {
         const response = await api.delete(`/products/${id}`)
 
         if (response.status === 200) {
-          toast.success('Produto deletado')
+          toast.success('Produto excluído')
 
           const newProducts = products.filter(p => p.id !== id)
           setProducts(newProducts)
@@ -42,7 +42,7 @@ const Products: React.FC = () => {
 
         throw new Error()
       } catch (err) {
-        toast.error('Falha ao deletar produto')
+        toast.error('Falha ao excluir produto')
       }
     },
     [products]
